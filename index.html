@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student KMS - Course Planning System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-red: #6B1010;
+            --medium-red: #8B2020;
+            --light-red: #A73030;
+            --cream: #F5F1E8;
+            --dark-cream: #E8E0D0;
+            --text-dark: #2C1810;
+            --green-accent: #9FD896;
+            --purple-accent: #B896D8;
+            --blue-accent: #96C8D8;
+            --warning-yellow: #F5C842;
+            --error-red: #D84F4F;
+            --success-green: #4CAF50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--dark-red);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--medium-red);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--cream);
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: white;
+            border-bottom: 2px solid var(--dark-cream);
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            padding: 16px 32px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .nav-item:hover {
+            background: var(--dark-cream);
+        }
+
+        .nav-item.active {
+            border-bottom-color: var(--dark-red);
+            color: var(--dark-red);
+            background: var(--cream);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Landing Screen */
+        .landing-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+            text-align: center;
+            gap: 40px;
+        }
+
+        .landing-hero {
+            max-width: 600px;
+        }
+
+        .landing-hero h2 {
+            font-size: 48px;
+            color: var(--dark-red);
+            margin-bottom: 16px;
+        }
+
+        .landing-hero p {
+            font-size: 20px;
+            color: var(--text-dark);
+            opacity: 0.8;
+        }
+
+        .landing-illustration {
+            width: 300px;
+            height: 200px;
+            background: var(--dark-cream);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .landing-options {
+            display: flex;
+            gap: 16px;
+        }
+
+        .option-button {
+            padding: 20px 40px;
+            background: var(--dark-red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+        }
+
+        .option-button.secondary {
+            background: white;
+            color: var(--dark-red);
+            border: 2px solid var(--dark-red);
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 16, 16, 0.3);
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark.checked {
+            background: var(--success-green);
+            border-color: var(--success-green);
+        }
+
+        /* Dashboard */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid var(--dark-cream);
+        }
+
+        .dashboard-card h3 {
+            font-size: 20px;
+            color: var(--dark-red);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .reminder-box {
+            background: var(--purple-accent);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reminder-box .icon {
+            font-size: 32px;
+        }
+
+        .reminder-box .text {
+            color: white;
+            font-weight: 600;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-item {
+            background: var(--cream);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .analytics-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-red);
+        }
+
+        .analytics-item .label {
+            font-size: 12px;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+
+        .contributor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contributor-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--cream);
+            border-radius: 8px;
+        }
+
+        .contributor-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--purple-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .contributor-info .name {
+            font-weight: 600;
+            color: var(--dark-red);
+        }
+
+        .contributor-info .contributions {
+            font-size: 12px;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+
+        /* Course Discovery */
+        .discovery-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--dark-cream);
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            background: white;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--dark-red);
+        }
+
+        .filters-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--dark-cream);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .filters-sidebar h3 {
+            font-size: 18px;
+            color: var(--dark-red);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--dark-red);
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--dark-cream);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--dark-red);
+        }
+
+        .course-card.selected {
+            border-color: var(--success-green);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .course-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--success-green);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            border: 3px solid var(--cream);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .course-icon.green { background: var(--green-accent); }
+        .course-icon.purple { background: var(--purple-accent); }
+
+        .course-details {
+            flex: 1;
+            margin-left: 12px;
+        }
+
+        .course-code {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-red);
+            opacity: 0.8;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 4px 0;
+        }
+
+        .course-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+
+        .course-description {
+            font-size: 13px;
+            color: var(--text-dark);
+            opacity: 0.8;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .course-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: var(--dark-cream);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--dark-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--medium-red);
+        }
+
+        .btn-secondary {
+            background: var(--dark-cream);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-red);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Professors View */
+        .professors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .professor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid var(--dark-cream);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .professor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .professor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--text-dark);
+            margin: 0 auto 16px;
+        }
+
+        .professor-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-red);
+            margin-bottom: 8px;
+        }
+
+        .professor-meta {
+            font-size: 13px;
+            color: var(--text-dark);
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+        /* Planner */
+        .planner-header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 2px solid var(--dark-cream);
+        }
+
+        .progress-bar-container {
+            margin: 16px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--dark-cream);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-green);
+            transition: width 0.3s;
+        }
+
+        .planner-courses {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .planner-course-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--dark-cream);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .planner-course-card.conflict {
+            border-color: var(--error-red);
+            background: rgba(216, 79, 79, 0.05);
+        }
+
+        .conflict-badge {
+            background: var(--error-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 3px solid var(--dark-red);
+        }
+
+        .modal-header {
+            background: var(--dark-red);
+            color: white;
+            padding: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--dark-cream);
+            margin-bottom: 24px;
+        }
+
+        .modal-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .modal-tab:hover {
+            background: var(--dark-cream);
+        }
+
+        .modal-tab.active {
+            border-bottom-color: var(--dark-red);
+            color: var(--dark-red);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.success { border-left-color: var(--success-green); }
+        .toast.error { border-left-color: var(--error-red); }
+        .toast.warning { border-left-color: var(--warning-yellow); }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--dark-red);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(107, 16, 16, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 999;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(107, 16, 16, 0.5);
+        }
+
+        .fab .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--cream);
+        }
+
+        /* Prerequisite Warning */
+        .prerequisite-warning {
+            background: rgba(216, 79, 79, 0.1);
+            border: 2px solid var(--error-red);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .prerequisite-warning .icon {
+            font-size: 24px;
+            color: var(--error-red);
+        }
+
+        .prerequisite-warning .content {
+            flex: 1;
+        }
+
+        .prerequisite-warning .title {
+            font-weight: 700;
+            color: var(--error-red);
+            margin-bottom: 4px;
+        }
+
+        .prerequisite-warning .text {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--dark-cream);
+            border-top-color: var(--dark-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Rating Stars */
+        .rating {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .star {
+            color: var(--warning-yellow);
+            font-size: 16px;
+        }
+
+        .rating-text {
+            margin-left: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-layout,
+            .discovery-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: static;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-item {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* Hide elements by default */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Student KMS</h1>
+        <div class="header-user">
+            <span>Hello, Lamine</span>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23F5F1E8'/%3E%3C/svg%3E" alt="User">
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <div class="nav-item active" data-screen="landing">Home</div>
+        <div class="nav-item" data-screen="dashboard">Dashboard</div>
+        <div class="nav-item" data-screen="discovery">Discover Courses</div>
+        <div class="nav-item" data-screen="professors">Professors</div>
+        <div class="nav-item" data-screen="planner">My Planner</div>
+    </div>
+
+    <!-- Landing Screen -->
+    <div class="screen active" id="landing">
+        <div class="landing-screen">
+            <div class="landing-illustration">📚</div>
+            <div class="landing-hero">
+                <h2>Find the perfect courses for you</h2>
+                <p>Explore 47 MBA electives</p>
+            </div>
+            <div class="landing-options">
+                <button class="option-button" id="courseLookup">
+                    <div class="checkmark checked">✓</div>
+                    <span>A course</span>
+                </button>
+                <button class="option-button secondary" id="professorLookup">
+                    <div class="checkmark"></div>
+                    <span>A professor</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div class="screen" id="dashboard">
+        <div class="container">
+            <div class="dashboard-layout">
+                <div>
+                    <div class="dashboard-card">
+                        <div class="reminder-box">
+                            <div class="icon">📧</div>
+                            <div>
+                                <div class="text">Reminder!</div>
+                                <div style="color: white; font-size: 13px;">Course selection in 2 weeks</div>
+                            </div>
+                        </div>
+
+                        <h3>Analytics</h3>
+                        <div class="analytics-grid">
+                            <div class="analytics-item">
+                                <div class="number">108</div>
+                                <div class="label">Views</div>
+                            </div>
+                            <div class="analytics-item">
+                                <div class="number">1.2k</div>
+                                <div class="label">Interactions</div>
+                            </div>
+                            <div class="analytics-item">
+                                <div class="number">42</div>
+                                <div class="label">Reviews</div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 24px;">Top Contributors</h3>
+                        <div class="contributor-list">
+                            <div class="contributor-item">
+                                <div class="contributor-avatar">PC</div>
+                                <div class="contributor-info">
+                                    <div class="name">Priyanka Chopra</div>
+                                    <div class="contributions">11 contributions</div>
+                                </div>
+                            </div>
+                            <div class="contributor-item">
+                                <div class="contributor-avatar">TC</div>
+                                <div class="contributor-info">
+                                    <div class="name">Tom Cruise</div>
+                                    <div class="contributions">10 contributions</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="dashboard-card">
+                        <h3>Recently Viewed Courses</h3>
+                        <div class="courses-grid">
+                            <div class="course-card" data-course-id="1">
+                                <div class="course-header">
+                                    <div class="course-icon green">📖</div>
+                                    <div class="course-details">
+                                        <div class="course-code">CONS 601</div>
+                                        <div class="course-title">Consulting</div>
+                                    </div>
+                                </div>
+                                <div class="course-meta">
+                                    <div>Full-time • Heavy workload • Textbook</div>
+                                    <div class="rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">☆</span>
+                                        <span class="rating-text">4.2</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-card" data-course-id="2">
+                                <div class="course-header">
+                                    <div class="course-icon purple">📖</div>
+                                    <div class="course-details">
+                                        <div class="course-code">NEG 602</div>
+                                        <div class="course-title">Negotiation</div>
+                                    </div>
+                                </div>
+                                <div class="course-meta">
+                                    <div>Part-time • No group work • No exam</div>
+                                    <div class="rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="rating-text">4.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discovery Screen -->
+    <div class="screen" id="discovery">
+        <div class="container">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search: courses, professors | Fall 2025">
+            
+            <div class="discovery-layout">
+                <div class="filters-sidebar">
+                    <h3>Filters</h3>
+                    
+                    <div class="filter-group">
+                        <h4>Department</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="dept-mba">
+                            <label for="dept-mba">MBA Core</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="dept-elective">
+                            <label for="dept-elective">MBA Elective</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Course Level</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="level-500">
+                            <label for="level-500">500-level</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="level-600">
+                            <label for="level-600">600-level</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Days Offered</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="day-mon">
+                            <label for="day-mon">Monday</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="day-wed">
+                            <label for="day-wed">Wednesday</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="day-fri">
+                            <label for="day-fri">Friday</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Time of Day</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="time-morning">
+                            <label for="time-morning">Morning</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="time-afternoon">
+                            <label for="time-afternoon">Afternoon</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="time-evening">
+                            <label for="time-evening">Evening</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 16px;">Clear Filters</button>
+                </div>
+
+                <div>
+                    <div id="coursesContainer" class="courses-grid">
+                        <!-- Courses will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professors Screen -->
+    <div class="screen" id="professors">
+        <div class="container">
+            <input type="text" class="search-box" placeholder="Search professors...">
+            
+            <h2 style="margin-bottom: 24px; color: var(--dark-red);">Professors</h2>
+            
+            <div class="professors-grid">
+                <div class="professor-card">
+                    <div class="professor-avatar"></div>
+                    <div class="professor-name">Wayne Rooney</div>
+                    <div class="professor-meta">
+                        • Daily Quizzes<br>
+                        • Interactive classes<br>
+                        <div class="rating" style="justify-content: center; margin-top: 8px;">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="rating-text">5.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="professor-card">
+                    <div class="professor-avatar"></div>
+                    <div class="professor-name">Angel Di Maria</div>
+                    <div class="professor-meta">
+                        • Uses OGL<br>
+                        • Strict on attendance<br>
+                        <div class="rating" style="justify-content: center; margin-top: 8px;">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">☆</span>
+                            <span class="rating-text">4.3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Planner Screen -->
+    <div class="screen" id="planner">
+        <div class="container">
+            <div class="planner-header">
+                <h2 style="color: var(--dark-red); margin-bottom: 16px;">My Course Planner</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Courses Selected: <span id="courseCount">0</span> of 3-5</span>
+                        <span id="creditCount">0 credits</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button class="btn btn-primary">Export Schedule</button>
+                    <button class="btn btn-secondary">Add to Calendar</button>
+                    <button class="btn btn-secondary" id="clearPlanner">Clear All</button>
+                </div>
+            </div>
+
+            <div id="plannerCourses" class="planner-courses">
+                <div style="text-align: center; padding: 60px 20px; color: var(--text-dark); opacity: 0.5;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                    <div style="font-size: 18px;">No courses added yet</div>
+                    <div style="font-size: 14px;">Start by browsing courses in the Discover tab</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Detail Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modalCourseTitle">Course Title</h2>
+                    <div id="modalCourseCode" style="font-size: 14px; opacity: 0.9;">COURSE 000</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <div class="modal-tab active" data-tab="overview">Overview</div>
+                    <div class="modal-tab" data-tab="reviews">Reviews</div>
+                    <div class="modal-tab" data-tab="schedule">Schedule</div>
+                </div>
+
+                <div class="tab-content active" id="overview">
+                    <div id="prerequisiteWarning" style="display: none;"></div>
+                    
+                    <h3 style="color: var(--dark-red); margin-bottom: 12px;">What You'll Learn</h3>
+                    <p id="modalDescription" style="margin-bottom: 20px; line-height: 1.6;"></p>
+
+                    <h3 style="color: var(--dark-red); margin-bottom: 12px;">Course Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Instructor</div>
+                            <div id="modalInstructor" style="font-size: 14px;"></div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Workload</div>
+                            <div id="modalWorkload" style="font-size: 14px;"></div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Credits</div>
+                            <div id="modalCredits" style="font-size: 14px;"></div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Format</div>
+                            <div id="modalFormat" style="font-size: 14px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button class="btn btn-primary" id="modalAddButton" onclick="addCourseFromModal()">Add to Planner</button>
+                        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="reviews">
+                    <div id="reviewsContent">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: var(--dark-red); margin-bottom: 12px;">Student Reviews</h3>
+                            <div class="rating" style="margin-bottom: 16px;">
+                                <span class="star" style="font-size: 20px;">★</span>
+                                <span class="star" style="font-size: 20px;">★</span>
+                                <span class="star" style="font-size: 20px;">★</span>
+                                <span class="star" style="font-size: 20px;">★</span>
+                                <span class="star" style="font-size: 20px;">☆</span>
+                                <span class="rating-text" style="font-size: 16px; margin-left: 8px;">4.5 out of 5</span>
+                                <span style="font-size: 14px; margin-left: 8px; opacity: 0.7;">(87 reviews)</span>
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid var(--dark-cream); padding-top: 16px; margin-top: 16px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sarah Johnson • MBA 2024</div>
+                            <div class="rating" style="margin-bottom: 8px;">
+                                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.6;">Excellent course! The professor is engaging and makes complex topics easy to understand. Highly recommend for anyone interested in this field.</p>
+                        </div>
+
+                        <div style="border-top: 1px solid var(--dark-cream); padding-top: 16px; margin-top: 16px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Michael Chen • MBA 2024</div>
+                            <div class="rating" style="margin-bottom: 8px;">
+                                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">☆</span>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.6;">Good course overall. The workload is manageable if you stay on top of readings. Group project was challenging but rewarding.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="schedule">
+                    <div id="scheduleContent">
+                        <h3 style="color: var(--dark-red); margin-bottom: 16px;">Course Schedule</h3>
+                        <div id="modalSchedule" style="margin-bottom: 20px;"></div>
+                        <div id="conflictWarning" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="plannerFab" onclick="goToPlanner()">
+        📋
+        <div class="badge" id="plannerBadge" style="display: none;">0</div>
+    </button>
+
+    <script>
+        // Application State
+        const state = {
+            currentScreen: 'landing',
+            selectedCourses: [],
+            currentCourseId: null,
+            courses: [
+                {
+                    id: 1,
+                    code: 'CONS 601',
+                    title: 'Consulting',
+                    description: 'Learn advanced consulting frameworks, client management, and problem-solving techniques used by top consulting firms.',
+                    instructor: 'Dr. Sarah Mitchell',
+                    rating: 4.2,
+                    workload: '8-10 hours/week',
+                    credits: 3,
+                    format: 'Full-time • Heavy workload • Textbook',
+                    color: 'green',
+                    schedule: 'Monday & Wednesday, 6:00 PM - 9:00 PM',
+                    prerequisites: [],
+                    tags: ['Strategic', 'Case Studies']
+                },
+                {
+                    id: 2,
+                    code: 'NEG 602',
+                    title: 'Negotiation',
+                    description: 'Master negotiation strategies and tactics for business, personal, and international contexts.',
+                    instructor: 'Prof. James Chen',
+                    rating: 4.8,
+                    workload: '6-8 hours/week',
+                    credits: 3,
+                    format: 'Part-time • No group work • No exam',
+                    color: 'purple',
+                    schedule: 'Monday & Wednesday, 7:00 PM - 9:00 PM',
+                    prerequisites: [],
+                    tags: ['Communication', 'Leadership']
+                },
+                {
+                    id: 3,
+                    code: 'FIN 601',
+                    title: 'Corporate Finance',
+                    description: 'Explore financial decision-making, capital structure, and investment analysis for corporations.',
+                    instructor: 'Dr. Emily Rodriguez',
+                    rating: 4.5,
+                    workload: '10-12 hours/week',
+                    credits: 3,
+                    format: 'Full-time • Heavy workload • Exam',
+                    color: 'green',
+                    schedule: 'Tuesday & Thursday, 6:00 PM - 9:00 PM',
+                    prerequisites: ['MATH 501', 'ACCT 500'],
+                    tags: ['Quantitative', 'Finance']
+                },
+                {
+                    id: 4,
+                    code: 'MKT 602',
+                    title: 'Digital Marketing',
+                    description: 'Learn modern digital marketing strategies including SEO, social media, and analytics.',
+                    instructor: 'Prof. David Kim',
+                    rating: 4.6,
+                    workload: '7-9 hours/week',
+                    credits: 3,
+                    format: 'Part-time • Group work • Project-based',
+                    color: 'purple',
+                    schedule: 'Wednesday & Friday, 6:00 PM - 9:00 PM',
+                    prerequisites: ['MKT 501'],
+                    tags: ['Technology', 'Creative']
+                },
+                {
+                    id: 5,
+                    code: 'LEAD 603',
+                    title: 'Leadership Development',
+                    description: 'Develop essential leadership skills through experiential learning and self-reflection.',
+                    instructor: 'Dr. Lisa Anderson',
+                    rating: 4.9,
+                    workload: '5-7 hours/week',
+                    credits: 2,
+                    format: 'Part-time • Interactive • No exam',
+                    color: 'green',
+                    schedule: 'Friday, 6:00 PM - 9:00 PM',
+                    prerequisites: [],
+                    tags: ['Soft Skills', 'Personal Growth']
+                },
+                {
+                    id: 6,
+                    code: 'DATA 601',
+                    title: 'Business Analytics',
+                    description: 'Apply data science techniques to solve real business problems and drive decision-making.',
+                    instructor: 'Prof. Michael Zhang',
+                    rating: 4.4,
+                    workload: '12-15 hours/week',
+                    credits: 4,
+                    format: 'Full-time • Very heavy workload • Technical',
+                    color: 'purple',
+                    schedule: 'Monday & Wednesday, 6:00 PM - 9:00 PM',
+                    prerequisites: ['STAT 500', 'PROG 500'],
+                    tags: ['Technical', 'Analytics']
+                }
+            ]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCourses();
+            setupEventListeners();
+            loadFromLocalStorage();
+        });
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const screen = item.dataset.screen;
+                    switchScreen(screen);
+                });
+            });
+
+            // Landing buttons
+            document.getElementById('courseLookup').addEventListener('click', () => {
+                switchScreen('discovery');
+            });
+
+            document.getElementById('professorLookup').addEventListener('click', () => {
+                switchScreen('professors');
+            });
+
+            // Modal tabs
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+
+            // Search
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                filterCourses(e.target.value);
+            });
+
+            // Clear planner
+            document.getElementById('clearPlanner').addEventListener('click', clearPlanner);
+
+            // Close modal on outside click
+            document.getElementById('courseModal').addEventListener('click', (e) => {
+                if (e.target.id === 'courseModal') {
+                    closeModal();
+                }
+            });
+        }
+
+        // Switch Screen
+        function switchScreen(screenName) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(screenName).classList.add('active');
+            document.querySelector(`[data-screen="${screenName}"]`).classList.add('active');
+            
+            state.currentScreen = screenName;
+        }
+
+        // Load Courses
+        function loadCourses() {
+            const container = document.getElementById('coursesContainer');
+            container.innerHTML = '';
+
+            state.courses.forEach(course => {
+                const isSelected = state.selectedCourses.some(c => c.id === course.id);
+                const courseCard = createCourseCard(course, isSelected);
+                container.appendChild(courseCard);
+            });
+        }
+
+        // Create Course Card
+        function createCourseCard(course, isSelected) {
+            const card = document.createElement('div');
+            card.className = `course-card ${isSelected ? 'selected' : ''}`;
+            card.dataset.courseId = course.id;
+
+            const stars = '★'.repeat(Math.floor(course.rating)) + '☆'.repeat(5 - Math.floor(course.rating));
+
+            card.innerHTML = `
+                ${isSelected ? '<div class="course-badge">✓</div>' : ''}
+                <div class="course-header">
+                    <div class="course-icon ${course.color}">📖</div>
+                    <div class="course-details">
+                        <div class="course-code">${course.code}</div>
+                        <div class="course-title">${course.title}</div>
+                    </div>
+                </div>
+                <div class="course-description">${course.description.substring(0, 100)}...</div>
+                <div class="course-meta">
+                    <div>${course.format}</div>
+                    <div class="rating">
+                        ${stars.split('').map(s => `<span class="star">${s}</span>`).join('')}
+                        <span class="rating-text">${course.rating}</span>
+                    </div>
+                </div>
+                <div class="course-tags">
+                    ${course.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-primary" onclick="openCourseModal(${course.id})">View Details</button>
+                    <button class="btn btn-secondary" onclick="toggleCourse(${course.id})">${isSelected ? 'Remove' : 'Quick Add'}</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Open Course Modal
+        function openCourseModal(courseId) {
+            const course = state.courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            state.currentCourseId = courseId;
+
+            document.getElementById('modalCourseTitle').textContent = course.title;
+            document.getElementById('modalCourseCode').textContent = course.code;
+            document.getElementById('modalDescription').textContent = course.description;
+            document.getElementById('modalInstructor').textContent = course.instructor;
+            document.getElementById('modalWorkload').textContent = course.workload;
+            document.getElementById('modalCredits').textContent = `${course.credits} credits`;
+            document.getElementById('modalFormat').textContent = course.format;
+            document.getElementById('modalSchedule').textContent = course.schedule;
+
+            // Check prerequisites
+            const prerequisiteWarning = document.getElementById('prerequisiteWarning');
+            if (course.prerequisites && course.prerequisites.length > 0) {
+                prerequisiteWarning.style.display = 'block';
+                prerequisiteWarning.innerHTML = `
+                    <div class="prerequisite-warning">
+                        <div class="icon">🔒</div>
+                        <div class="content">
+                            <div class="title">Prerequisite Required</div>
+                            <div class="text">You must complete: ${course.prerequisites.join(', ')} before taking this course.</div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('modalAddButton').disabled = true;
+                document.getElementById('modalAddButton').textContent = 'Prerequisites Not Met';
+            } else {
+                prerequisiteWarning.style.display = 'none';
+                document.getElementById('modalAddButton').disabled = false;
+                const isSelected = state.selectedCourses.some(c => c.id === courseId);
+                document.getElementById('modalAddButton').textContent = isSelected ? 'Already Added' : 'Add to Planner';
+                document.getElementById('modalAddButton').disabled = isSelected;
+            }
+
+            // Check for conflicts
+            checkScheduleConflict(course);
+
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('courseModal').classList.remove('active');
+            state.currentCourseId = null;
+        }
+
+        // Switch Tab
+        function switchTab(tabName) {
+            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Add Course from Modal
+        function addCourseFromModal() {
+            if (state.currentCourseId) {
+                toggleCourse(state.currentCourseId);
+                closeModal();
+            }
+        }
+
+        // Toggle Course
+        function toggleCourse(courseId) {
+            const course = state.courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const index = state.selectedCourses.findIndex(c => c.id === courseId);
+            
+            if (index > -1) {
+                state.selectedCourses.splice(index, 1);
+                showToast(`${course.code} removed from planner`, 'success');
+            } else {
+                if (state.selectedCourses.length >= 5) {
+                    showToast('Maximum 5 courses allowed', 'error');
+                    return;
+                }
+                state.selectedCourses.push(course);
+                showToast(`${course.code} added to planner`, 'success');
+            }
+
+            loadCourses();
+            updatePlanner();
+            saveToLocalStorage();
+        }
+
+        // Update Planner
+        function updatePlanner() {
+            const container = document.getElementById('plannerCourses');
+            const count = state.selectedCourses.length;
+            const totalCredits = state.selectedCourses.reduce((sum, c) => sum + c.credits, 0);
+
+            document.getElementById('courseCount').textContent = count;
+            document.getElementById('creditCount').textContent = `${totalCredits} credits`;
+            document.getElementById('progressFill').style.width = `${(count / 4) * 100}%`;
+
+            const badge = document.getElementById('plannerBadge');
+            if (count > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = count;
+            } else {
+                badge.style.display = 'none';
+            }
+
+            if (count === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: var(--text-dark); opacity: 0.5;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                        <div style="font-size: 18px;">No courses added yet</div>
+                        <div style="font-size: 14px;">Start by browsing courses in the Discover tab</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            state.selectedCourses.forEach(course => {
+                const hasConflict = checkCourseConflict(course);
+                
+                const card = document.createElement('div');
+                card.className = `planner-course-card ${hasConflict ? 'conflict' : ''}`;
+                
+                const stars = '★'.repeat(Math.floor(course.rating)) + '☆'.repeat(5 - Math.floor(course.rating));
+
+                card.innerHTML = `
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <div class="course-icon ${course.color}" style="width: 48px; height: 48px; font-size: 24px;">📖</div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--dark-red); font-weight: 600;">${course.code}</div>
+                                <div style="font-size: 16px; font-weight: 700;">${course.title}</div>
+                                <div style="font-size: 13px; opacity: 0.7;">${course.instructor}</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 13px; opacity: 0.8; margin-bottom: 4px;">📅 ${course.schedule}</div>
+                        <div style="font-size: 13px; opacity: 0.8;">⏰ ${course.workload} • ${course.credits} credits</div>
+                        ${hasConflict ? '<div class="conflict-badge" style="margin-top: 8px;">⚠️ Schedule Conflict</div>' : ''}
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn btn-primary" onclick="openCourseModal(${course.id})">View Details</button>
+                        <button class="btn btn-secondary" onclick="toggleCourse(${course.id})">Remove</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Check Course Conflict
+        function checkCourseConflict(course) {
+            const otherCourses = state.selectedCourses.filter(c => c.id !== course.id);
+            
+            for (const other of otherCourses) {
+                if (schedulesOverlap(course.schedule, other.schedule)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Check Schedule Conflict in Modal
+        function checkScheduleConflict(course) {
+            const conflictWarning = document.getElementById('conflictWarning');
+            const hasConflict = checkCourseConflict(course);
+
+            if (hasConflict && state.selectedCourses.length > 0) {
+                const conflictingCourse = state.selectedCourses.find(c => 
+                    c.id !== course.id && schedulesOverlap(course.schedule, c.schedule)
+                );
+
+                if (conflictingCourse) {
+                    conflictWarning.style.display = 'block';
+                    conflictWarning.innerHTML = `
+                        <div class="prerequisite-warning" style="border-color: var(--error-red); background: rgba(216, 79, 79, 0.1);">
+                            <div class="icon">⚠️</div>
+                            <div class="content">
+                                <div class="title">Schedule Conflict Detected</div>
+                                <div class="text">This course conflicts with ${conflictingCourse.code}: ${conflictingCourse.title}</div>
+                                <div class="text" style="margin-top: 8px;">
+                                    <strong>${course.code}:</strong> ${course.schedule}<br>
+                                    <strong>${conflictingCourse.code}:</strong> ${conflictingCourse.schedule}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                conflictWarning.style.display = 'none';
+            }
+        }
+
+        // Schedules Overlap
+        function schedulesOverlap(schedule1, schedule2) {
+            // Simple check: if both contain "Monday" and times overlap
+            const days1 = schedule1.toLowerCase();
+            const days2 = schedule2.toLowerCase();
+
+            const commonDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].filter(day => 
+                days1.includes(day) && days2.includes(day)
+            );
+
+            if (commonDays.length > 0) {
+                // Extract times (simplified - assumes format "X:00 PM - Y:00 PM")
+                const timeMatch1 = schedule1.match(/(\d+):00 (AM|PM)/);
+                const timeMatch2 = schedule2.match(/(\d+):00 (AM|PM)/);
+
+                if (timeMatch1 && timeMatch2) {
+                    return true; // Simplified: any overlap on same day is a conflict
+                }
+            }
+
+            return false;
+        }
+
+        // Clear Planner
+        function clearPlanner() {
+            if (state.selectedCourses.length === 0) return;
+
+            if (confirm('Are you sure you want to remove all courses from your planner?')) {
+                state.selectedCourses = [];
+                loadCourses();
+                updatePlanner();
+                saveToLocalStorage();
+                showToast('Planner cleared', 'success');
+            }
+        }
+
+        // Filter Courses
+        function filterCourses(query) {
+            const cards = document.querySelectorAll('.course-card');
+            const lowerQuery = query.toLowerCase();
+
+            cards.forEach(card => {
+                const courseId = parseInt(card.dataset.courseId);
+                const course = state.courses.find(c => c.id === courseId);
+                
+                if (!course) return;
+
+                const matches = 
+                    course.code.toLowerCase().includes(lowerQuery) ||
+                    course.title.toLowerCase().includes(lowerQuery) ||
+                    course.instructor.toLowerCase().includes(lowerQuery) ||
+                    course.description.toLowerCase().includes(lowerQuery);
+
+                card.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // Go to Planner
+        function goToPlanner() {
+            switchScreen('planner');
+        }
+
+        // Show Toast
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Local Storage
+        function saveToLocalStorage() {
+            localStorage.setItem('studentKMS', JSON.stringify({
+                selectedCourses: state.selectedCourses.map(c => c.id)
+            }));
+        }
+
+        function loadFromLocalStorage() {
+            const data = localStorage.getItem('studentKMS');
+            if (data) {
+                const parsed = JSON.parse(data);
+                state.selectedCourses = parsed.selectedCourses
+                    .map(id => state.courses.find(c => c.id === id))
+                    .filter(c => c);
+                updatePlanner();
+            }
+        }
+    </script>
+</body>
+</html>
