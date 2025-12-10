@@ -3,7 +3,7 @@
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://pmgbeoji-byte.github.io/student-kms-app/)
 [![GitHub](https://img.shields.io/badge/github-repository-blue)](https://github.com/pmgbeoji-byte/student-kms-app)
 
-A modern, interactive course planning system designed for MBA students at University Canada West. Built as part of MENT 602: Design Thinking course with comprehensive accessibility and usability testing.
+A modern, interactive course planning system designed for MBA students... Built as part of MENT 602: Design Thinking course with comprehensive accessibility and usability testing.
 
 ![Student KMS Preview](https://via.placeholder.com/1200x600/6B1010/F5F1E8?text=Student+KMS+Course+Planner)
 
@@ -18,7 +18,6 @@ A modern, interactive course planning system designed for MBA students at Univer
 - Track progress toward degree completion
 
 **Developed by:** Paterson Mgbeoji  
-**Institution:** University Canada West  
 **Course:** MENT 602: Design Thinking (HBD-FALL25-01)  
 **Instructor:** Arya Babaei
 
@@ -338,7 +337,7 @@ This project demonstrates practical application of **Design Thinking** principle
 
 ## 📝 License
 
-This project was created for academic purposes as part of MENT 602: Design Thinking at University Canada West.
+This project was created for academic purposes as part of MENT 602: Design Thinking.
 
 **Educational Use:** Free to use for learning and educational purposes  
 **Commercial Use:** Requires permission from author
@@ -348,7 +347,7 @@ This project was created for academic purposes as part of MENT 602: Design Think
 ## 👨‍💻 Author
 
 **Paterson Mgbeoji**  
-MBA Student, University Canada West
+
 
 📧 Email: [Your UCW Email]  
 🔗 LinkedIn: [Your LinkedIn]  
@@ -359,8 +358,6 @@ MBA Student, University Canada West
 ## 🙏 Acknowledgments
 
 - **Professor Arya Babaei** - Course instructor and mentor
-- **John Chen** - User interview participant
-- **University Canada West** - MBA Program support
 - **Design Thinking Community** - Inspiration and best practices
 
 ---
