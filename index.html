@@ -1714,10 +1714,10 @@
                                 <div style="font-size: 16px; font-weight: 700;">${course.title}</div>
                                 <div style="font-size: 13px; opacity: 0.7;">${course.instructor}</div>
                             </div>
-                            ${hasConflict ? '<div class="conflict-badge" style="margin-left: auto;">⚠️ CONFLICT</div>' : ''}
                         </div>
                         <div style="font-size: 13px; opacity: 0.8; margin-bottom: 4px;">📅 ${course.schedule}</div>
                         <div style="font-size: 13px; opacity: 0.8;">⏰ ${course.workload} • ${course.credits} credits</div>
+                        ${hasConflict ? '<div class="conflict-badge" style="margin-top: 8px;">⚠️ Schedule Conflict</div>' : ''}
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn btn-primary" onclick="openCourseModal(${course.id})">View Details</button>
