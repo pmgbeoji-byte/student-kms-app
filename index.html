@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1544,10 +1545,36 @@
                 document.getElementById('modalAddButton').textContent = 'Prerequisites Not Met';
             } else {
                 prerequisiteWarning.style.display = 'none';
-                document.getElementById('modalAddButton').disabled = false;
                 const isSelected = state.selectedCourses.some(c => c.id === courseId);
-                document.getElementById('modalAddButton').textContent = isSelected ? 'Already Added' : 'Add to Planner';
-                document.getElementById('modalAddButton').disabled = isSelected;
+                
+                // Check for conflicts with already selected courses
+                let hasConflict = false;
+                for (const selectedCourse of state.selectedCourses) {
+                    if (selectedCourse.id !== courseId && schedulesOverlap(course.schedule, selectedCourse.schedule)) {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+                
+                // Update button based on state
+                const addButton = document.getElementById('modalAddButton');
+                addButton.disabled = isSelected;
+                
+                if (isSelected) {
+                    addButton.textContent = 'Already Added';
+                    addButton.style.background = 'var(--dark-cream)';
+                    addButton.style.color = 'var(--text-dark)';
+                } else if (hasConflict) {
+                    addButton.textContent = '⚠️ Add Anyway (Conflict Exists)';
+                    addButton.style.background = 'var(--warning-yellow)';
+                    addButton.style.color = 'var(--text-dark)';
+                    addButton.disabled = false;
+                } else {
+                    addButton.textContent = 'Add to Planner';
+                    addButton.style.background = 'var(--dark-red)';
+                    addButton.style.color = 'white';
+                    addButton.disabled = false;
+                }
             }
 
             // Check for conflicts
@@ -1587,15 +1614,53 @@
             const index = state.selectedCourses.findIndex(c => c.id === courseId);
             
             if (index > -1) {
+                // Removing course
                 state.selectedCourses.splice(index, 1);
                 showToast(`${course.code} removed from planner`, 'success');
             } else {
+                // Adding course - check for conflicts first
                 if (state.selectedCourses.length >= 5) {
                     showToast('Maximum 5 courses allowed', 'error');
                     return;
                 }
+
+                // Check for schedule conflicts
+                let conflictingCourse = null;
+                for (const selectedCourse of state.selectedCourses) {
+                    if (schedulesOverlap(course.schedule, selectedCourse.schedule)) {
+                        conflictingCourse = selectedCourse;
+                        break;
+                    }
+                }
+
+                if (conflictingCourse) {
+                    // Show conflict warning modal
+                    const proceed = confirm(
+                        `⚠️ SCHEDULE CONFLICT DETECTED\n\n` +
+                        `${course.code} (${course.title}) conflicts with:\n` +
+                        `${conflictingCourse.code} (${conflictingCourse.title})\n\n` +
+                        `${course.code}: ${course.schedule}\n` +
+                        `${conflictingCourse.code}: ${conflictingCourse.schedule}\n\n` +
+                        `Do you want to add this course anyway?\n\n` +
+                        `Note: You will have overlapping classes and may need to drop one course.`
+                    );
+
+                    if (!proceed) {
+                        showToast('Course not added due to schedule conflict', 'warning');
+                        return;
+                    }
+                }
+
+                // Add the course
                 state.selectedCourses.push(course);
                 showToast(`${course.code} added to planner`, 'success');
+                
+                if (conflictingCourse) {
+                    // Show additional warning that conflict exists
+                    setTimeout(() => {
+                        showToast(`⚠️ Warning: ${course.code} conflicts with ${conflictingCourse.code}`, 'warning');
+                    }, 1500);
+                }
             }
 
             loadCourses();
@@ -1680,29 +1745,38 @@
         // Check Schedule Conflict in Modal
         function checkScheduleConflict(course) {
             const conflictWarning = document.getElementById('conflictWarning');
-            const hasConflict = checkCourseConflict(course);
+            
+            // Check if this course conflicts with ANY course already in the planner
+            let conflictingCourse = null;
+            
+            for (const selectedCourse of state.selectedCourses) {
+                // Don't compare course with itself
+                if (selectedCourse.id === course.id) continue;
+                
+                if (schedulesOverlap(course.schedule, selectedCourse.schedule)) {
+                    conflictingCourse = selectedCourse;
+                    break;
+                }
+            }
 
-            if (hasConflict && state.selectedCourses.length > 0) {
-                const conflictingCourse = state.selectedCourses.find(c => 
-                    c.id !== course.id && schedulesOverlap(course.schedule, c.schedule)
-                );
-
-                if (conflictingCourse) {
-                    conflictWarning.style.display = 'block';
-                    conflictWarning.innerHTML = `
-                        <div class="prerequisite-warning" style="border-color: var(--error-red); background: rgba(216, 79, 79, 0.1);">
-                            <div class="icon">⚠️</div>
-                            <div class="content">
-                                <div class="title">Schedule Conflict Detected</div>
-                                <div class="text">This course conflicts with ${conflictingCourse.code}: ${conflictingCourse.title}</div>
-                                <div class="text" style="margin-top: 8px;">
-                                    <strong>${course.code}:</strong> ${course.schedule}<br>
-                                    <strong>${conflictingCourse.code}:</strong> ${conflictingCourse.schedule}
-                                </div>
+            if (conflictingCourse) {
+                conflictWarning.style.display = 'block';
+                conflictWarning.innerHTML = `
+                    <div class="prerequisite-warning" style="border-color: var(--error-red); background: rgba(216, 79, 79, 0.1);">
+                        <div class="icon">⚠️</div>
+                        <div class="content">
+                            <div class="title">Schedule Conflict Detected</div>
+                            <div class="text">This course conflicts with ${conflictingCourse.code}: ${conflictingCourse.title}</div>
+                            <div class="text" style="margin-top: 8px;">
+                                <strong>${course.code}:</strong> ${course.schedule}<br>
+                                <strong>${conflictingCourse.code}:</strong> ${conflictingCourse.schedule}
+                            </div>
+                            <div class="text" style="margin-top: 12px; padding: 8px; background: rgba(216, 79, 79, 0.1); border-radius: 4px;">
+                                <strong>⚠️ Warning:</strong> Adding this course will create a schedule conflict. You will need to remove ${conflictingCourse.code} first.
                             </div>
                         </div>
-                    `;
-                }
+                    </div>
+                `;
             } else {
                 conflictWarning.style.display = 'none';
             }
