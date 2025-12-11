@@ -1714,10 +1714,10 @@
                                 <div style="font-size: 16px; font-weight: 700;">${course.title}</div>
                                 <div style="font-size: 13px; opacity: 0.7;">${course.instructor}</div>
                             </div>
+                            ${hasConflict ? '<div class="conflict-badge" style="margin-left: auto;">⚠️ CONFLICT</div>' : ''}
                         </div>
                         <div style="font-size: 13px; opacity: 0.8; margin-bottom: 4px;">📅 ${course.schedule}</div>
                         <div style="font-size: 13px; opacity: 0.8;">⏰ ${course.workload} • ${course.credits} credits</div>
-                        ${hasConflict ? '<div class="conflict-badge" style="margin-top: 8px;">⚠️ Schedule Conflict</div>' : ''}
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn btn-primary" onclick="openCourseModal(${course.id})">View Details</button>
@@ -1783,7 +1783,6 @@
 
         // Schedules Overlap
         function schedulesOverlap(schedule1, schedule2) {
-            // Simple check: if both contain "Monday" and times overlap
             const days1 = schedule1.toLowerCase();
             const days2 = schedule2.toLowerCase();
 
@@ -1791,16 +1790,22 @@
                 days1.includes(day) && days2.includes(day)
             );
 
+            console.log('Checking overlap:', schedule1, 'vs', schedule2);
+            console.log('Common days:', commonDays);
+
             if (commonDays.length > 0) {
-                // Extract times (simplified - assumes format "X:00 PM - Y:00 PM")
                 const timeMatch1 = schedule1.match(/(\d+):00 (AM|PM)/);
                 const timeMatch2 = schedule2.match(/(\d+):00 (AM|PM)/);
 
+                console.log('Time matches:', timeMatch1, timeMatch2);
+
                 if (timeMatch1 && timeMatch2) {
-                    return true; // Simplified: any overlap on same day is a conflict
+                    console.log('CONFLICT DETECTED');
+                    return true;
                 }
             }
 
+            console.log('No conflict');
             return false;
         }
 
